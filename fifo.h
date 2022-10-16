@@ -39,7 +39,7 @@ public:
         return FIFO_SUCCESS;
     }
 
-    FIFO_Errors_t dequeue(T * data)
+    FIFO_Errors_t dequeue(T data)
     {
         // If queue is empty return error
         if (size() == 0)
@@ -47,7 +47,7 @@ public:
             return FIFO_ERROR_EMPTY;
         }
 
-        *data = buffer[head];
+        data = buffer[head];
         head = (head + 1) % N;
         count--;
 

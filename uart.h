@@ -4,6 +4,10 @@
 #ifndef __UART_H__
 #define __UART_H__
 
+#include "fifo.h"
+
+typedef FIFO< unsigned char, 16> FIFO_Queue;
+
 class UART
 {
 private:
@@ -19,6 +23,9 @@ private:
     };
     UART_Registers_t * regs;
     
+    FIFO_Queue RxFIFO;
+    FIFO_Queue TxFIFO;
+
 public:
     enum UART_Baudrate_t
     {
@@ -40,7 +47,11 @@ public:
     void put(char c)
     {
         while (! (regs->ucsra & (1 << 5)) ) ;
-        regs->udr = c;
+        //regs->udr = c; 
+        TxFIFO.enqueue(c);
+
+        // ligar interrupção UDRE
+        regs->ucsrb |= (1 << 5); //(1 << UDRIE0)
     }
 
     void puts(char *s)
@@ -55,10 +66,34 @@ public:
 
     char get()
     {
-        while (! (regs->ucsra & (1 << 7)) ) ;
-        return regs->udr;
+        //while (! (regs->ucsra & (1 << 7)) ) ;
+        // return regs->udr;
+
+        if(RxFIFO.size() > 0){
+            unsigned char data;
+            RxFIFO.dequeue(data);
+            return data;
+        }
     }
 
+    void udre_handler()
+    {
+        if (TxFIFO.size() > 0)
+        {
+            TxFIFO.dequeue(regs->udr);
+        }
+        else
+        {
+            // Desligar interrupção UDRE
+            regs->ucsrb &= ~(1 << 5);
+        }
+    }
+
+    void rxc_handler() 
+    {
+        while (! (regs->ucsra & (1 << 7)) ) ;
+        RxFIFO.enqueue(regs->udr);  
+    }
 };
 
 #endif
