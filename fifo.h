@@ -39,7 +39,7 @@ public:
         return FIFO_SUCCESS;
     }
 
-    FIFO_Errors_t dequeue(T data)
+    FIFO_Errors_t dequeue(T * data)
     {
         // If queue is empty return error
         if (size() == 0)
