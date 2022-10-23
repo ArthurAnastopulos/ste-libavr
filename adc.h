@@ -4,6 +4,10 @@
 #ifndef __ADC_H__
 #define __ADC_H__
 
+#include "fifo.h"
+
+typedef FIFO< int, 16> CircularFifo;
+
 class ADC
 {
 public:
@@ -37,9 +41,16 @@ public:
         while (regs->adcsra & adsc_mask) ;
         regs->adcsra |= adsc_mask;
         while (regs->adcsra & adsc_mask) ;
-        return regs->adc;
+        //return regs->adc;
+        int data;
+        cfifo.dequeue(&data);
+        return data;
     }
 
+    static void int_handler()
+    {
+        cfifo.enqueue(regs->adc);
+    }
 private:
     struct ADC_Registers_t
     {
@@ -56,6 +67,8 @@ private:
     }
     
     ADC_Channel_t channel;
+
+    static CircularFifo cfifo;
 };
 
 #endif

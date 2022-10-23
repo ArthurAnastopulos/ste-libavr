@@ -2,7 +2,7 @@
 # Autor: Arliones Hoeller, IFSC-SJE
 
 APP := main.cc
-COMPONENTS := adc.o gpio_pin.o
+COMPONENTS := adc.o gpio_pin.o uart.o
 SERIAL_PORT := /dev/ttyACM0
 
 CC_FLAGS := -mmcu=atmega328p
