@@ -6,8 +6,6 @@
  
 #include "fifo.h"
  
-typedef FIFO< unsigned char, 16> FIFO_Queue;
- 
 class UART
 {
 private:
@@ -22,7 +20,8 @@ private:
        unsigned char udr;
    };
    static UART_Registers_t * regs;
-  
+   
+   typedef FIFO< unsigned char, 16> FIFO_Queue;
    static FIFO_Queue RxFIFO;
    static FIFO_Queue TxFIFO;
  

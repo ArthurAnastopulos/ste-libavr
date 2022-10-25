@@ -4,6 +4,7 @@
 #include "adc.h"
 
 ADC::ADC_Registers_t * ADC::regs = (ADC::ADC_Registers_t *) 0x78;
+ADC::CircularFifo ADC::cfifo;
 
 extern "C"
 {

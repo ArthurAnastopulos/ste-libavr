@@ -4,9 +4,7 @@
 #ifndef __ADC_H__
 #define __ADC_H__
 
-#include "fifo.h"
-
-typedef FIFO< int, 16> CircularFifo;
+#include "cfifo.h"
 
 class ADC
 {
@@ -42,9 +40,8 @@ public:
         regs->adcsra |= adsc_mask;
         while (regs->adcsra & adsc_mask) ;
         //return regs->adc;
-        int data;
-        cfifo.dequeue(&data);
-        return data;
+        return cfifo.average();
+        
     }
 
     static void int_handler()
@@ -67,7 +64,8 @@ private:
     }
     
     ADC_Channel_t channel;
-
+    
+    typedef CFIFO< 16, int> CircularFifo;   
     static CircularFifo cfifo;
 };
 
