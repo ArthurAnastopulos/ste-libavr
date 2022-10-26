@@ -11,8 +11,7 @@ extern "C"
    void __vector_21() __attribute__ ((signal));
 }
 
-
-void __vector_18()
+void __vector_21()
 {
    ADC::int_handler();
 }

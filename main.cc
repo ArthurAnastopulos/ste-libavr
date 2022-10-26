@@ -1,8 +1,10 @@
 // Arquivo: main.cc
 // Autor: Arliones Hoeller, IFSC-SJE
 
+#include <stdio.h>
 #include "gpio_pin.h"
 #include "uart.h"
+#include "adc.h"
 
 void int0_isr();
 void int1_isr();
@@ -15,6 +17,8 @@ GPIO_Pin btn1(GPIO_Pin::GPIO_PORTD,
              GPIO_Pin::GPIO_PIN_3,
              GPIO_Pin::GPIO_INT_RISING,
              int1_isr);
+
+ADC adc(ADC::ADC_CH0);
 
 UART uart(UART::UART_9600);
 
@@ -42,10 +46,23 @@ void busy_wait_delay(int times)
     }
 }
 
+char strbuf[16];
+
 void loop()
 {
-    uart.puts("loop\n");
-    busy_wait_delay(2);
+    //uart.puts("loop\n");
+
+    for (int i = 0; i < 16; i++)
+    {
+        sprintf(strbuf, "Valor: %d \n", adc.get(i));
+        uart.puts(strbuf);
+        busy_wait_delay(2);
+    }
+    
+
+    // printf(strbuf, "Valor: %d \n", adc.get());
+    // uart.puts(strbuf);
+    // busy_wait_delay(2);
 }
 
 int main()

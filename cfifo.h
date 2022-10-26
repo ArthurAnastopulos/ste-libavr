@@ -7,7 +7,7 @@ class CFIFO
 public:
 
 
-    CFIFO() : in(0)
+    CFIFO()
     {
         for (int i = 0; i < N; i++)
             data[i] = 0;
@@ -25,7 +25,7 @@ public:
         data[in] = obj;
     }
 
-    T dequeue(int i)
+    T get(int i)
     {
         int ii = ((unsigned)(in - i)) % N;
         return data[ii];
