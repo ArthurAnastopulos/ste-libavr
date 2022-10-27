@@ -27,23 +27,18 @@ public:
     ADC(ADC_Channel_t ch) : channel(ch)
     {
         set_channel();
-        //regs->adcsra = (1 << 7) | 7;
         regs->adcsra =  (1 << 6) | (1 << 7) | (1 << 3) | (1 << 5) | 7; // Bit 3 – ADIE: ADC Interrupt // Enable Bit 5 – ADATE: ADC Auto Trigger Enable
         regs->adcsrb = 0;
     }
 
+    int get()
+    {
+        return cfifo.average();
+    }
+
     int get(int i)
     {
-        // static const unsigned char adsc_mask = 1 << 6;
-        // set_channel();
-        // regs->adcsra |= adsc_mask;
-        // while (regs->adcsra & adsc_mask) ;
-        // regs->adcsra |= adsc_mask;
-        // while (regs->adcsra & adsc_mask) ;
-        //return regs->adc;
-
-        return cfifo.get(i);
-        
+         return cfifo.get(i);
     }
 
     static void int_handler()

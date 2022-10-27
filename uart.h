@@ -21,7 +21,7 @@ private:
    };
    static UART_Registers_t * regs;
    
-   typedef FIFO< unsigned char, 16> FIFO_Queue;
+   typedef FIFO< unsigned char, 32> FIFO_Queue;
    static FIFO_Queue RxFIFO;
    static FIFO_Queue TxFIFO;
  
@@ -45,8 +45,6 @@ public:
  
    void put(char c)
    {
-       //while (! (regs->ucsra & (1 << 5)) ) ;
-       //regs->udr = c;
        __asm__ ("cli");
        TxFIFO.enqueue(c);
        __asm__ ("sei");
@@ -67,9 +65,6 @@ public:
  
    char get()
    {
-       //while (! (regs->ucsra & (1 << 7)) ) ;
-       // return regs->udr;
- 
        if(RxFIFO.size() > 0){
            unsigned char data;
            RxFIFO.dequeue(&data);
@@ -94,7 +89,6 @@ public:
  
    static void rxc_handler()
    {
-       //while (! (regs->ucsra & (1 << 7)) ) ;
        __asm__ ("cli");
        RxFIFO.enqueue(regs->udr);
        __asm__ ("sei"); 
