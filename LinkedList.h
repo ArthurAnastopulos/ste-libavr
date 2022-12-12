@@ -59,6 +59,8 @@ public:
 
     T_ORDER update_head_rank(T_ORDER upd)
     {
+        if(_size == 0) return -1;
+
         if(upd > head->rank)
         {
             head->rank = 0;
@@ -89,8 +91,8 @@ private:
         Element *nxt = head;
         while ( (nxt != 0) && (nxt->rank < _rank) )
         {
-           nxt = nxt->next;
-           if(RELATIVE) _rank -= nxt->rank;
+            if(RELATIVE) _rank -= nxt->rank;
+            nxt = nxt->next;
         }
 
         if (nxt == 0)

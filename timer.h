@@ -8,7 +8,7 @@ class Timer0
 {
     public:
         typedef unsigned long long Microseconds;
-        static const unsigned char TOP = 199;
+        static const unsigned char TOP = 125;
         static const unsigned char MAX = 255;
         //const unsigned char prescale = 8; //Div
 
@@ -26,7 +26,7 @@ class Timer0
             regs->tccr0b = (1 << 1); //CS01 -> bit 1
             reg->timsk0 = (1 << 0); //TOIE0 -> bit 0
 
-            regs->tcnt0 = MAX - TOP;
+            regs->tcnt0 = MAX - TOP + 1; //Timer Base
         }
 
         ~Timer0()
@@ -36,17 +36,17 @@ class Timer0
             reg->timsk0 = 0;
         }
 
-        Microseconds micros() {return usec_counter;}
+        static Microseconds micros() {return usec_counter;}
 
         static void timer_isr_handler()
         {
             regs->tcnt0 = MAX - TOP;
-            usec_counter += 100;
+            usec_counter += 2000; //Timer Resolution
             Observer * obs = 0;
             for (int i = 0; i < observer.size(); i++)
             {
                 obs = observer.get(i);
-                obs->update(100);
+                obs->update(2000);
             }
             
         }

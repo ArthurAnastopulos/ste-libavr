@@ -3,6 +3,7 @@
 #include "timer.h"
 #include "alarm.h"
 #include <stdio.h>
+#include "adc.h"
 
 UART uart(UART::UART_9600);
 char strbuf[32];
@@ -14,7 +15,7 @@ Alarm alarm(&fqueue);
 Event evt1, evt2;
 
 const char * MSG1 = "Oi, tudo bem?\n";
-void printMsg1(void * arg)
+void read_ADC(void * arg)
 {
     alarm.schedule(evt1);
     char * msg = (char *) arg;
@@ -22,7 +23,7 @@ void printMsg1(void * arg)
 }
 
 const char * MSG2 = "ping\n";
-void printMsg2(void * arg)
+void print_avg(void * arg)
 {
     alarm.schedule(evt2);
     char * msg = (char *) arg;
@@ -34,13 +35,13 @@ void setup()
     uart.puts("setup\n");
     timer.registerObserver(&alarm);
 
-    evt1.time = 1000000;
-    evt1.func = printMsg1;
+    evt1.time = 25000;
+    evt1.func = read_ADC;
     evt1.args = (void*) MSG1;
     alarm.schedule(evt1);
 
-    evt2.time = 200000;
-    evt2.func = printMsg2;
+    evt2.time = 1000000;
+    evt2.func = print_avg;
     evt2.args = (void*) MSG2;
     alarm.schedule(evt2);
 }

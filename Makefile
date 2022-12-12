@@ -1,7 +1,7 @@
 # Arquivo: Makefile
 # Autor: Arliones Hoeller, IFSC-SJE
 
-APP := main_alarm.cc
+APP := main-rms.cc
 COMPONENTS := adc.o gpio_pin.o uart.o timer.o defs.o
 SERIAL_PORT := /dev/ttyACM0
 
